@@ -4,13 +4,14 @@ import { message } from 'antd';
 import { LoadingOutlined, UserOutlined } from '@ant-design/icons';
 import type { IStudent } from '../types';
 
-const Card = ({ update, setUpdate }: { update: IStudent | null, setUpdate: Dispatch<SetStateAction<null | IStudent>> }) => {
+const Card = ({ update, setUpdate, searchValue }: { update: IStudent | null, setUpdate: Dispatch<SetStateAction<null | IStudent>>, searchValue: string }) => {
     const [messageApi, contextHolder] = message.useMessage();
     const { getBlog, deleteBlog } = useBlog();
     const { mutate, isPending } = deleteBlog;
 
     const { data } = getBlog;
     const blogData: IStudent[] = data;
+    const searchData: IStudent[] = data?.filter((item: IStudent) => ((item.fname + item.lname + item.address + item.phone_number + item.birthdate).toLowerCase()).includes((searchValue.toLowerCase().replace(/\s+/g, ""))));
 
     const [IDDelete, setIDDelete] = useState<string>("");
 
@@ -43,7 +44,8 @@ const Card = ({ update, setUpdate }: { update: IStudent | null, setUpdate: Dispa
                     <h1 className='text-lg'>Students</h1>
                     <div className='cards grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3 '>
                         {
-                            blogData && [...blogData]?.reverse()?.map((item) => (
+                            (blogData && searchData) && [...searchData]?.reverse()?.map((item) => (
+
                                 <div key={item.id} className={`${update?.id === item.id ? "border-[#99eb0c]" : "border-gray-400"} border py-2 flex flex-col tracking-wide`}>
                                     <div className='flex items-center justify-between border-b-[.5px] pb-2 mb-2 border-gray-400 px-2 sm:xpx-3'>
                                         <div>
@@ -69,7 +71,7 @@ const Card = ({ update, setUpdate }: { update: IStudent | null, setUpdate: Dispa
                                             <p className='capitalize'>{item.fname} {item.lname}</p>
                                         </div>
                                         <div className='flex flex-col md:flex-row md:gap-1'>
-                                            <p className='text-gray-600 text-[15px]'>Birthdata:</p>
+                                            <p className='text-gray-600 text-[15px]'>Birthdate:</p>
                                             <p className='capitalize'>{item.birthdate}</p>
                                         </div>
                                         <div className='flex flex-col md:flex-row md:gap-1'>

@@ -6,11 +6,13 @@ import type { IStudent } from './types';
 
 const App = () => {
   const [update, setUpdate] = useState<IStudent | null>(null);
+  const [searchValue, setSearchValue] = useState<string>("");
+
   return (
     <>
-      <Header />
+      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
       <Create update={update} setUpdate={setUpdate} />
-      <Card update={update} setUpdate={setUpdate} />
+      <Card update={update} setUpdate={setUpdate} searchValue={searchValue} />
     </>
   )
 }
